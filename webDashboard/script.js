@@ -1,11 +1,11 @@
 var firebaseConfig = {
-  apiKey: "AIzaSyDTSyePp6m8hoQH_3PPuE0-q68k9vYGyYo",
+  apiKey: "*****************************-q68k9vYGyYo",
   authDomain: "akilliev-faec9.firebaseapp.com",
   databaseURL: "https://akilliev-faec9-default-rtdb.firebaseio.com",
   projectId: "akilliev-faec9",
   storageBucket: "akilliev-faec9.appspot.com",
   messagingSenderId: "149016191726",
-  appId: "1:149016191726:web:bb8a141383ed09c9ffc9ff",
+  appId: "1:149016191726:*****:*********1383ed09c9ffc9ff",
   measurementId: "G-DP0MG60XXB"
 };
 
