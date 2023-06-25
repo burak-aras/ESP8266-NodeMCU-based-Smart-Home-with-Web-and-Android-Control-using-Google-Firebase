@@ -1,0 +1,139 @@
+<head>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="styles.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <script src="https://use.fontawesome.com/68cbe5c16f.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/styles.min.css">
+  <script src="dashboard.js"></script>
+  <script src="lightSensorControl.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+  <meta charset="utf-8">
+  <title>Akıllı Ev Sistemi</title>
+</head>
+
+<script src="script.js"></script>
+<link rel="stylesheet" href="style.css">
+
+
+<body>
+  <div id="window-container">
+
+
+    <div class="window" id="temp">
+      <div id="C">
+        <div class="header">
+          <div class="drag header-left">
+            <i class="material-icons">cloud_queue</i>
+
+          </div>
+          <div id="outside" class="drag header-right">
+            Sıcaklık Verisi
+          </div>
+          <div class="right">
+            <i class="material-icons">show_chart</i>
+          </div>
+        </div>
+        <canvas id="C_graph"></canvas>
+        <div class="currentWeather"><span class="data" id="temperatureVakye"></span></div>
+      </div>
+      <div id="H">
+        <div class="header">
+          <div class="drag header-left">
+            <i class="material-icons">invert_colors</i>
+
+          </div>
+          <div class="outside drag header-right">
+            Nem Verisi
+          </div>
+          <div class="right">
+            <i class="material-icons">show_chart</i>
+          </div>
+        </div>
+        <canvas id="H_graph"></canvas>
+        <div class="currentHumidity">
+          <span class="data" id="humidityValue"></span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="window" id="light">
+      <div id="L">
+        <div class="header">
+          <i class="material-icons">clear</i>
+          <div class="right">
+            <i class="material-icons">show_chart</i>
+          </div>
+        </div>
+        <div id="lightPercentage" class="data">
+          <canvas id="lightCanvas"></canvas>
+          <div id="lightinput">
+            <div id="percentageIncrement">+</div>
+            <div id="percentageValue" style="text-align: center;">80%</div>
+            <div id="percentageDecrement">-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="window" id="gas">
+
+      <div id="Co">
+        <div class="header">
+          <i class="material-icons">error_outline</i>
+          <div class="outside drag header-right">
+            Gaz Verisi
+          </div>
+          <div class="right">
+            <i class="material-icons">show_chart</i>
+          </div>
+
+        </div>
+        <div class="jauge">
+          <span id="gazValue"></span>
+          <canvas id="Co_graph"></canvas>
+
+        </div>
+        <div class="GasCo">
+        </div>
+      </div>
+    </div>
+
+
+    <div class="window" id="electricity">
+      <div id="E">
+        <div class="header">
+        </div>
+        <div class="currentElectricity">
+          <div style="margin-left: 95px; position: absolute; margin-top: 140px;">RÖLE <span
+              style="margin-left: 70px;">LDR</span> <span style="margin-left: 70px;">HAREKET</span> </div>
+          <label style="margin-left:90px; margin-top: 200px;" class="switch">
+            <input type="checkbox" id="roleSwitch">
+            <div class="slider"></div>
+          </label>
+
+          <label style="margin-left:50px;" class="switch">
+            <input type="checkbox" id="ldrSwitch">
+            <div class="slider"></div>
+          </label>
+
+        
+
+          <label style="margin-left:50px;" class="switch">
+            <input type="checkbox" id="pirSwitch">
+            <div class="slider"></div>
+          </label>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+
+  </script>
+</body>

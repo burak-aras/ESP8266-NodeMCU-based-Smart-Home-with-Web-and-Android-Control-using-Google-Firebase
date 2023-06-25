@@ -1,0 +1,414 @@
+
+  body {
+    background: #10151f;
+    font-family: 'Roboto', sans-serif;
+    color: red;
+  }
+
+  .data {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    position: absolute;
+    width: 100%;
+  }
+
+  i {
+    color: #ddd !important;
+  }
+
+  .material-icons {
+    font-size: 1.3vw;
+  }
+
+  .ourside {
+    color: red;
+  }
+
+  .drag {
+    position: absolute;
+  }
+
+  #window-container {
+    height: 40vw;
+    width: 80vw;
+    position: relative;
+    left: 10vw;
+    top: 10vh;
+  }
+
+  .window {
+    perspective: 800px;
+    color: #ffffff;
+    border-radius: 2%;
+    height: 49%;
+    position: absolute;
+    background: #141d2d;
+    box-shadow: 0 1vmin 1.5vmin #121417;
+  }
+
+  .right {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  #temp {
+    top: 0;
+    left: 0;
+    width: 60%;
+  }
+
+  #light {
+    top: 0;
+    right: 0;
+    width: 38%;
+  }
+
+  #electricity {
+    bottom: 0;
+    right: 0;
+    width: 30%;
+  }
+
+  #gas {
+    bottom: 0;
+    left: 0;
+    width: 30%;
+  }
+
+  .fa-cloud {
+    color: #676f7a;
+  }
+
+  .header {
+    float: top;
+    color: #676f7a;
+    font-size: 80%;
+    position: absolute;
+    width: 90%;
+    height: 10%;
+    top: 2%;
+    left: 5%;
+  }
+
+  .header .header-left {
+    left: 0;
+  }
+
+  .header .header-right {
+    top: 0;
+    right: 15%;
+  }
+
+  .currentWeather {
+    transition: top 0.2s ease-in-out;
+    overflow: hidden;
+    color: #ffffff;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 7vw;
+    line-height: 36vh;
+  }
+
+  .currentWeather span {
+    left: 0;
+  }
+
+  .currentHumidity {
+    transition: top 0.2s ease-in-out;
+    overflow: hidden;
+    color: #ffffff;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 7vw;
+    line-height: 36vh;
+  }
+
+  .currentHumidity span {
+    left: 0;
+  }
+
+  .currentElectricity {
+    transition: top 0.2s ease-in-out;
+    overflow: hidden;
+    color: #ffffff;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+  }
+
+  .currentElectricity span {
+
+    left: 10px;
+  }
+
+  .currentElectricity #kwh {
+    font-size: 5vw;
+  }
+
+  .currentGas {
+    transition: top 0.2s ease-in-out;
+    overflow: hidden;
+    color: #ffffff;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 5vw;
+    line-height: 36vh;
+  }
+
+  .currentGas span {
+    left: 0;
+  }
+
+  .currentCo {
+    transition: top 0.2s ease-in-out;
+    overflow: hidden;
+    color: #ffffff;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 5vw;
+    line-height: 36vh;
+  }
+
+  .currentCo span {
+    left: 0;
+  }
+
+  #C {
+    position: absolute;
+    top: 2.5%;
+    height: 95%;
+    width: 50%;
+    border-right: 1px solid #3a3d44;
+  }
+
+  #C #C_graph {
+    transition: bottom 0.7s ease-in-out;
+    position: absolute;
+    width: 95%;
+    height: 85%;
+    bottom: 0;
+    left: 2.5%;
+  }
+
+  #E {
+    position: absolute;
+    top: 2.5%;
+    height: 95%;
+    width: 100%;
+  }
+
+  #L {
+    position: absolute;
+    top: 2.5%;
+    height: 95%;
+    width: 100%;
+  }
+
+  #G_graph {
+    transition: bottom 0.7s ease-in-out;
+    position: absolute;
+    width: 95%;
+    height: 85%;
+    bottom: 15%;
+    left: 2.5%;
+  }
+
+  #Co {
+    position: absolute;
+    right: 2.5%;
+    top: 2.5%;
+    height: 95%;
+    width: 95%;
+  }
+
+  #Co_graph {
+    transition: bottom 0.7s ease-in-out;
+    position: absolute;
+    width: 95%;
+    height: 85%;
+    bottom: 15%;
+    left: 2.5%;
+  }
+
+  #W {
+    position: absolute;
+    top: 2.5%;
+    height: 95%;
+    width: 100%;
+  }
+
+  #H {
+    position: absolute;
+    right: 0;
+    bottom: 2.5%;
+    height: 95%;
+    width: 50%;
+  }
+
+  #H #H_graph {
+    transition: bottom 0.7s ease-in-out;
+    position: absolute;
+    width: 95%;
+    height: 85%;
+    bottom: 0;
+    left: 2.5%;
+  }
+
+  #E_graph {
+    transition: bottom 0.7s ease-in-out;
+    position: absolute;
+    width: 95%;
+    height: 85%;
+    bottom: 0.5%;
+    left: 2.5%;
+  }
+
+  .jauge {
+    overflow: hidden;
+    margin: auto;
+    text-align: center;
+    position: absolute;
+    width: 16.5vw;
+    height: 16.5vw;
+    border: 5px solid #262830;
+    border-radius: 50%;
+    border-left-color: #cbff82;
+    border-bottom-color: transparent;
+    top: 0;
+    left: 0;
+    bottom: -10%;
+    right: 0;
+  }
+
+  .jauge span {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 35%;
+    font-size: 5vw;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+  }
+
+  #lightPercentage {
+    top: 10%;
+    position: absolute;
+    left: 2.5%;
+    width: 95%;
+    height: 90%;
+  }
+
+  #lightCanvas {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+  }
+
+  #lightinput {
+    font-size: 40px;
+    position: absolute;
+    width: 100%;
+    height: 20%;
+    top: 40%;
+  }
+
+  #percentageValue {
+    top: 0;
+    height: 100%;
+    width: 20%;
+    right: 40%;
+    position: absolute;
+  }
+
+  #percentageIncrement {
+    text-align: center;
+    top: 0;
+    height: 100%;
+    width: 10%;
+    right: 25%;
+    position: absolute;
+    cursor: pointer;
+  }
+
+  #percentageDecrement {
+    text-align: center;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 10%;
+    left: 25%;
+    cursor: pointer;
+  }
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked+.slider {
+    background-color: #2196F3;
+  }
+
+  input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+
+  input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  /* İkinci switch butonu */
+  .switch:nth-child(2) {
+    margin-top: 10px;
+  }
+
+  /* Üçüncü switch butonu */
+  .switch:nth-child(3) {
+    margin-top: 10px;
+  }
