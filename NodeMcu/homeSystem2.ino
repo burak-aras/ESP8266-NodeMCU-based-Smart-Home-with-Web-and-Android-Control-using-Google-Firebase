@@ -19,7 +19,7 @@ int ldrisik = D6;
 #define WIFI_PASSWORD "faruk6607"
 
 // Insert Firebase project API Key
-#define API_KEY "AIzaSyDTSyePp6m8hoQH_3PPuE0-q68k9vYGyYo"
+#define API_KEY "***************-q68k9vYGyYo"
 
 // Insert RTDB URLefine the RTDB URL */
 #define DATABASE_URL "https://akilliev-faec9-default-rtdb.firebaseio.com/"
