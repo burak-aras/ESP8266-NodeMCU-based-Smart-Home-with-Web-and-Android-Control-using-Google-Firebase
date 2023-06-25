@@ -1,13 +1,13 @@
+#include "DHT.h"
+#define DHTPIN D5
+#define DHTTYPE DHT11
+#define RELAY_PIN D1
+#define GAZ_PIN D2
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <Firebase_ESP_Client.h>
-// Motor A connections
-int PIRpin = D5;
-int enA = D0;
-int in1 = D1;
-int in2 = D2;
-int ldrpin = D7;
-int ldrisik = D6;
+
+DHT dht(DHTPIN, DHTTYPE);
 
 //Provide the token generation process info.
 #include "addons/TokenHelper.h"
@@ -16,10 +16,10 @@ int ldrisik = D6;
 
 // Insert your network credentials
 #define WIFI_SSID "Ömer Faruk's Galaxy S20 FE"
-#define WIFI_PASSWORD "faruk6606"
+#define WIFI_PASSWORD "faruk6607"
 
 // Insert Firebase project API Key
-#define API_KEY "AIzaSyDTSyePp6m8hoQH_3PPuE0-q68k9vYGyYo"
+#define API_KEY "**********************-q68k9vYGyYo"
 
 // Insert RTDB URLefine the RTDB URL */
 #define DATABASE_URL "https://akilliev-faec9-default-rtdb.firebaseio.com/"
@@ -35,12 +35,9 @@ FirebaseConfig config;
 bool signupOK = false;
 
 void setup() {
-  pinMode(ldrpin, INPUT);
-  pinMode(PIRpin, INPUT);
-  pinMode(ldrisik, OUTPUT);
-  pinMode(enA, OUTPUT);
-  pinMode(in1, OUTPUT);
-  pinMode(in2, OUTPUT);
+  pinMode(RELAY_PIN, OUTPUT);
+  pinMode(DHTPIN, INPUT);
+  dht.begin();
   Serial.begin(115200);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("Connecting to Wi-Fi");
@@ -66,70 +63,66 @@ void setup() {
   config.token_status_callback = tokenStatusCallback;  //see addons/TokenHelper.h
   Firebase.begin(&config, &auth);
   Firebase.reconnectWiFi(true);
+  roleBaslangic();
 }
-void fanVerisi() {
+//Role için firebase üzerinde başlangıç değişkeni atanması
+void roleBaslangic() {
+  if (Firebase.RTDB.setFloat(&fbdo, "Role/role", 1)) {
+    Serial.print("Role: ");
+  } else {
+    Serial.println("FAILED");
+    Serial.println("REASON: " + fbdo.errorReason());
+  }  
+}
+void sicaklikSensor() {
+  // Sensör Verisi okunur
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  // Firebase üzerine sensör verilerini yazdırır
+  if (Firebase.RTDB.setFloat(&fbdo, "DHT/humidity", h)) {
+    Serial.print("Humidity: ");
+    Serial.println(h);
+  } else {
+    Serial.println("FAILED");
+    Serial.println("REASON: " + fbdo.errorReason());
+  }
+  if (Firebase.RTDB.setFloat(&fbdo, "DHT/temperature", t)) {
+    //      Serial.println("PASSED");
+    Serial.print("Temperature: ");
+    Serial.println(t);
+  }
+}
+void roleVerisi() {
   // Firebase üzerindeki röle değerini okur ve belirtilmiş değere göre röleleri açıp kapatır
-  if (Firebase.RTDB.getInt(&fbdo, "/FAN")) {
+  if (Firebase.RTDB.getInt(&fbdo, "/Role/role")) {
     if (fbdo.dataTypeEnum() == fb_esp_rtdb_data_type_integer) {
-      int fan = fbdo.to<int>();
-      analogWrite(enA, fan * 2);
-      digitalWrite(in1, HIGH);
-      digitalWrite(in2, LOW);
-      Serial.println("Fan");
-      Serial.println(fan);
-    } else {
-      Serial.println(fbdo.errorReason());
-    }
-  }
-}
-void hareket() {
-  if (Firebase.RTDB.getInt(&fbdo, "/PIR/hareketAktif")) {
-    if (fbdo.dataTypeEnum() == fb_esp_rtdb_data_type_integer) {
-      int hareket = fbdo.to<int>();
-      Serial.println("hareket");
-      Serial.println(hareket);
-      if (hareket == 1) {
-        int sensorVeri = digitalRead(PIRpin);
-        if (sensorVeri == 1) {
-          if (Firebase.RTDB.setFloat(&fbdo, "PIR/Hareket", 1)) {
-            Serial.print("Hareket Tespti edildi  ");
-          } else {
-            Serial.println("FAILED");
-            Serial.println("REASON: " + fbdo.errorReason());
-          }
-        }
+      int role = fbdo.to<int>();
+      Serial.println("Röle Değeri");
+      Serial.print(role);
+      if (role == 1) {
+        digitalWrite(RELAY_PIN, HIGH);
+        delay(1000);
+      } else {
+        digitalWrite(RELAY_PIN, LOW);
       }
     } else {
       Serial.println(fbdo.errorReason());
     }
   }
 }
-void ldrVerisii() {
-  if (Firebase.RTDB.getInt(&fbdo, "/Role/ldr")) {
-    if (fbdo.dataTypeEnum() == fb_esp_rtdb_data_type_integer) {
-      int ldr = fbdo.to<int>();
-      if (ldr == 1) {
-        int ldrVerisi = analogRead(ldrpin);
-        Serial.println("----------------------------");
-        Serial.println(ldrVerisi);
-        Serial.println("ldr verisi");
-
-        if (ldrVerisi != 0) {
-          digitalWrite(ldrisik, HIGH);
-        } else {
-          digitalWrite(ldrisik, LOW);
-        }
-      }
-    } else {
-      Serial.println(fbdo.errorReason());
-    }
+void gazSensor(){
+  int gazDeger = analogRead(D2);
+  if (Firebase.RTDB.setFloat(&fbdo, "gaz/gaz", gazDeger)) {
+    Serial.print("Gaz Değeri: ");
+    Serial.print(gazDeger);
   }
+  
 }
 void loop() {
   if (Firebase.ready() && signupOK) {
-    fanVerisi();
-    hareket();
-    ldrVerisii();
+    sicaklikSensor();
+    roleVerisi();
+    gazSensor();
   }
   Serial.println("____");
 }
