@@ -1,133 +1,135 @@
-#include <LiquidCrystal_I2C.h>
-#include <Servo.h>
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+#include <Firebase_ESP_Client.h>
+// Motor A connections
+int PIRpin = D5;
+int enA = D0;
+int in1 = D1;
+int in2 = D2;
+int ldrpin = D7;
+int ldrisik = D6;
 
-Servo servoMotor1;  // Servo nesnesi oluşturuluyor
-Servo servoMotor2;
-#define trigPin 4
-#define echoPin 2
-#define trigPin2 11
-#define echoPin2 12
-#define kirmiziLed 5
-#define yesilLed 6
-#define buzzerPin 3
-#define girisKirmizi 7
-#define girisYesil 9
-long sure, mesafe;
-long sure2, mesafe2;
-int aracSayisi = 0;
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+//Provide the token generation process info.
+#include "addons/TokenHelper.h"
+//Provide the RTDB payload printing info and other helper functions.
+#include "addons/RTDBHelper.h"
+
+// Insert your network credentials
+#define WIFI_SSID "Ömer Faruk's Galaxy S20 FE"
+#define WIFI_PASSWORD "faruk6606"
+
+// Insert Firebase project API Key
+#define API_KEY "AIzaSyDTSyePp6m8hoQH_3PPuE0-q68k9vYGyYo"
+
+// Insert RTDB URLefine the RTDB URL */
+#define DATABASE_URL "https://akilliev-faec9-default-rtdb.firebaseio.com/"
+
+//Define Firebase Data object
+FirebaseData fbdo;
+
+FirebaseAuth auth;
+FirebaseConfig config;
+
+//unsigned long sendDataPrevMillis = 0;
+//int count = 0;
+bool signupOK = false;
+
 void setup() {
-  servoMotor1.attach(8);
-  servoMotor2.attach(10);
-  Serial.begin(9600);
-  pinMode(kirmiziLed, OUTPUT);
-  pinMode(girisKirmizi, OUTPUT);
-  pinMode(girisYesil, OUTPUT);
-  pinMode(buzzerPin, OUTPUT);
-  pinMode(yesilLed, OUTPUT);
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-  pinMode(trigPin2, OUTPUT);
-  pinMode(echoPin2, INPUT);
-  lcd.begin();
-}
+  pinMode(ldrpin, INPUT);
+  pinMode(PIRpin, INPUT);
+  pinMode(ldrisik, OUTPUT);
+  pinMode(enA, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  Serial.begin(115200);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("Connecting to Wi-Fi");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(300);
+  }
+  Serial.print("Connected with IP: ");
+  Serial.println(WiFi.localIP());
+  Serial.println();
+  config.api_key = API_KEY;
+  config.database_url = DATABASE_URL;
 
-int mesafeOlcme() {
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(3);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  sure = pulseIn(echoPin, HIGH);
-  long mesafe = (sure / 2) * 0.0343;
-  return mesafe;
-}
-int mesafeOlcme2() {
-  digitalWrite(trigPin2, LOW);
-  delayMicroseconds(3);
-  digitalWrite(trigPin2, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin2, LOW);
-  sure2 = pulseIn(echoPin2, HIGH);
-  long mesafe2 = (sure2 / 2) * 0.0343;
-  Serial.println(mesafe2);
-  return mesafe2;
-}
-int buzzer = 0;
-void bosYer() {
-
-  int bosMesafe = mesafeOlcme2();
-  if (bosMesafe <= 10) {
-    if (buzzer == 0) {
-      digitalWrite(buzzerPin, HIGH);
-      delay(1000);
-      digitalWrite(buzzerPin, LOW);
-      buzzer = buzzer + 1;
-    }
-    digitalWrite(kirmiziLed, HIGH);
-    digitalWrite(yesilLed, LOW);
+  /* Sign up */
+  if (Firebase.signUp(&config, &auth, "", "")) {
+    Serial.println("ok");
+    signupOK = true;
   } else {
-    digitalWrite(kirmiziLed, LOW);
-    digitalWrite(yesilLed, HIGH);
+    Serial.printf("%s\n", config.signer.signupError.message.c_str());
   }
+
+  /* Assign the callback function for the long running token generation task */
+  config.token_status_callback = tokenStatusCallback;  //see addons/TokenHelper.h
+  Firebase.begin(&config, &auth);
+  Firebase.reconnectWiFi(true);
 }
-void girisCikis() {
-  int i = 1;
-  while (i < 5) {
-    bosYer();
-    int mesafe = mesafeOlcme();
-    if (mesafe <= 20) {
-      if (mesafe <= 10) {
-        if (aracSayisi > 0) {
-          aracSayisi = aracSayisi - 1;
-          servoMotor1.write(90);
-          delay(1000);
-          servoMotor1.write(0);
-          delay(1000);
-        }
-        lcd.clear();
-        lcd.setCursor(0, 0);  // İlk satırın başlangıç noktası
-        lcd.print("cikan araç");
-        lcd.setCursor(0, 1);
-        lcd.print(aracSayisi);
-        while (1) {
-          int mesafe1 = mesafeOlcme();
-          if (mesafe1 > 10) {
-            break;
-          } else {
-          }
-        }
-      } else {
-        servoMotor2.write(90);
-        delay(1000);
-        servoMotor2.write(0);
-        delay(1000);
-        aracSayisi = aracSayisi + 1;
-        delay(1000);
-        lcd.clear();
-        lcd.setCursor(0, 0);  // İlk satırın başlangıç noktası
-        lcd.print("giren araç");
-        lcd.setCursor(0, 1);
-        lcd.print(aracSayisi);
-        while (1) {
-          int mesafe2 = mesafeOlcme();
-          if (mesafe2 < 10 || mesafe2 > 20) {
-            break;
-          }
-        }
-      }
-      if (aracSayisi < 10) {
-        digitalWrite(girisYesil, HIGH);
-        digitalWrite(girisKirmizi, LOW);
-      } else {
-        digitalWrite(girisYesil, LOW);
-        digitalWrite(girisKirmizi, HIGH);
-      }
+void fanVerisi() {
+  // Firebase üzerindeki röle değerini okur ve belirtilmiş değere göre röleleri açıp kapatır
+  if (Firebase.RTDB.getInt(&fbdo, "/FAN")) {
+    if (fbdo.dataTypeEnum() == fb_esp_rtdb_data_type_integer) {
+      int fan = fbdo.to<int>();
+      analogWrite(enA, fan * 2);
+      digitalWrite(in1, HIGH);
+      digitalWrite(in2, LOW);
+      Serial.println("Fan");
+      Serial.println(fan);
+    } else {
+      Serial.println(fbdo.errorReason());
     }
   }
 }
+void hareket() {
+  if (Firebase.RTDB.getInt(&fbdo, "/PIR/hareketAktif")) {
+    if (fbdo.dataTypeEnum() == fb_esp_rtdb_data_type_integer) {
+      int hareket = fbdo.to<int>();
+      Serial.println("hareket");
+      Serial.println(hareket);
+      if (hareket == 1) {
+        int sensorVeri = digitalRead(PIRpin);
+        if (sensorVeri == 1) {
+          if (Firebase.RTDB.setFloat(&fbdo, "PIR/Hareket", 1)) {
+            Serial.print("Hareket Tespti edildi  ");
+          } else {
+            Serial.println("FAILED");
+            Serial.println("REASON: " + fbdo.errorReason());
+          }
+        }
+      }
+    } else {
+      Serial.println(fbdo.errorReason());
+    }
+  }
+}
+void ldrVerisii() {
+  if (Firebase.RTDB.getInt(&fbdo, "/Role/ldr")) {
+    if (fbdo.dataTypeEnum() == fb_esp_rtdb_data_type_integer) {
+      int ldr = fbdo.to<int>();
+      if (ldr == 1) {
+        int ldrVerisi = analogRead(ldrpin);
+        Serial.println("----------------------------");
+        Serial.println(ldrVerisi);
+        Serial.println("ldr verisi");
 
-
+        if (ldrVerisi != 0) {
+          digitalWrite(ldrisik, HIGH);
+        } else {
+          digitalWrite(ldrisik, LOW);
+        }
+      }
+    } else {
+      Serial.println(fbdo.errorReason());
+    }
+  }
+}
 void loop() {
-  girisCikis();
+  if (Firebase.ready() && signupOK) {
+    fanVerisi();
+    hareket();
+    ldrVerisii();
+  }
+  Serial.println("____");
 }
